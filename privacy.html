@@ -11,12 +11,13 @@
          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
          font-size:17px; line-height:1.65; }
   .wrap { max-width:760px; margin:0 auto; padding:0 24px 80px; }
-  header { background:#111111; padding:28px 24px; margin-bottom:40px; }
-  .merk { max-width:760px; margin:0 auto; display:flex; align-items:center; gap:12px; }
-  .logo { background:var(--lemon); border-radius:8px; width:40px; height:40px;
-          display:flex; align-items:center; justify-content:center;
-          font-weight:700; color:#111; font-size:16px; }
-  .merknaam { color:#fff; font-size:19px; font-weight:600; }
+  header { background:#FFFFFF; border-bottom:3px solid var(--lemon); padding:18px 24px; margin-bottom:32px; }
+  .merk { max-width:760px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .logo-img { height:58px; width:auto; display:block; }
+  .taal button { background:transparent; border:1px solid #D0CEC6;
+          color:var(--ink); font-size:14px; padding:5px 11px; border-radius:6px;
+          cursor:pointer; margin-left:6px; font-family:inherit; }
+  .taal button.actief { background:var(--lemon); border-color:var(--lemon); color:#111; font-weight:600; }
   h1 { font-size:30px; line-height:1.25; margin:0 0 8px; }
   h2 { font-size:21px; margin:44px 0 12px; padding-top:20px; border-top:1px solid var(--lijn); }
   h3 { font-size:17px; margin:26px 0 8px; }
@@ -32,16 +33,22 @@
   footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--lijn);
            color:var(--muted); font-size:15px; }
 
-  /* Afdrukken en opslaan als PDF. De zwarte balk kost op papier veel inkt en
-     wordt door sommige browsers weggelaten, dus die wordt licht. Verder zorgen
-     we dat een kop nooit onderaan een pagina losraakt van zijn tabel. */
+  /* Taalwisseling: standaard Nederlands tonen, Engels verbergen. */
+  body[data-taal="nl"] .en { display:none; }
+  body[data-taal="en"] .nl { display:none; }
+
+  /* Afdrukken en opslaan als PDF. Beide talen komen mee, zodat de PDF een
+     volledige kopie voor het dossier is; de balk wordt licht om inkt te sparen,
+     en een kop raakt nooit los van zijn tabel. */
   @page { margin:18mm 16mm; }
   @media print {
+    body[data-taal] .en, body[data-taal] .nl { display:block !important; }
+    .taal { display:none !important; }
+    #en-start { page-break-before:always; break-before:page; }
     body { font-size:10.5pt; line-height:1.5; }
     .wrap { max-width:none; padding:0; }
     header { background:#FFFFFF; border-bottom:2px solid var(--lemon);
              padding:0 0 12px; margin-bottom:24px; }
-    .merknaam { color:#111111; }
     h1 { font-size:20pt; }
     h2 { font-size:13pt; margin-top:22px; padding-top:12px;
          break-after:avoid; page-break-after:avoid; }
@@ -52,20 +59,27 @@
     footer { margin-top:28px; }
   }
 </style>
+<noscript><style>.en{display:block !important;} #en-start{page-break-before:always;}</style></noscript>
 </head>
-<body>
+<body data-taal="nl">
 
 <header>
   <div class="merk">
-    <div class="logo">LS</div>
-    <div class="merknaam">Lemon Suites</div>
+    <img class="logo-img" src="data:image/png;base64,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" alt="Lemon Suites" width="58" height="58">
+    <div class="taal">
+      <button type="button" id="btn-nl" class="actief" onclick="kiesTaal('nl')">Nederlands</button>
+      <button type="button" id="btn-en" onclick="kiesTaal('en')">English</button>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
 
+<!-- ============================ NEDERLANDS ============================ -->
+<div class="nl" lang="nl">
+
 <h1>Privacyverklaring Huurdersapp</h1>
-<p class="datum">Versie 2, 18 september 2026. Deze versie vervangt die van mei 2026.</p>
+<p class="datum">Versie 1, 24 september 2026.</p>
 
 <p>In deze verklaring leest u welke persoonsgegevens wij verwerken wanneer u de
 Huurdersapp van Lemon Suites gebruikt, waarom wij dat doen, hoe lang wij ze
@@ -73,7 +87,7 @@ bewaren en welke rechten u heeft.</p>
 
 <p>Deze verklaring gaat over de app. Een melding die u via de app doet, gaat
 daarna naar onze eigen mailomgeving en naar ons beheersysteem. Daar gelden eigen
-bewaartermijnen; zie het hoofdstuk <a href="#bewaren">Hoe lang wij gegevens
+bewaartermijnen; zie het hoofdstuk <a href="#bewaren-nl">Hoe lang wij gegevens
 bewaren</a>.</p>
 
 <h2>1. Wie is verantwoordelijk</h2>
@@ -90,77 +104,40 @@ Wij beoordelen periodiek of dat nodig is.</p>
 
 <table>
   <tr><th>Soort</th><th>Wat</th><th>Waar het vandaan komt</th></tr>
-  <tr>
-    <td>Account</td>
-    <td>Voornaam, achternaam, e-mailadres, wachtwoord (versleuteld opgeslagen), taalkeuze</td>
-    <td>U, bij het registreren</td>
-  </tr>
-  <tr>
-    <td>Woning en contract</td>
-    <td>Adres, postcode, woonplaats, complex, ingangsdatum, einddatum, huurprijs, servicekosten, parkeerplaats en berging, medebewoners op uw adres</td>
-    <td>Onze huuradministratie</td>
-  </tr>
-  <tr>
-    <td>Meldingen en bestellingen</td>
-    <td>Omschrijving, locatie in de woning, categorie, datum, en de foto's en video's die u meestuurt</td>
-    <td>U, via de app</td>
-  </tr>
-  <tr>
-    <td>Gesprekken</td>
-    <td>Uw berichten aan de AI-assistent en aan de beheerder, de antwoorden daarop, meegestuurde bijlagen, en of een bericht is gelezen</td>
-    <td>U en onze beheerders</td>
-  </tr>
-  <tr>
-    <td>Formulieren</td>
-    <td>Afhankelijk van het formulier: telefoonnummer, rekeningnummer en tenaamstelling, einddatum en reden van vertrek, toekomstig adres, foto's van de woning per ruimte, uw handtekening, en bij een aanvraag medehuurderschap een uittreksel uit de basisregistratie personen</td>
-    <td>U, via de app</td>
-  </tr>
-  <tr>
-    <td>Gegevens van een ander</td>
-    <td>Bij een aanvraag medehuurderschap of een gedeeltelijke opzegging: naam, adres, telefoonnummer en e-mailadres van de andere persoon</td>
-    <td>U, via de app. Zie hoofdstuk 7</td>
-  </tr>
-  <tr>
-    <td>Pushberichten</td>
-    <td>Een code die uw toestel identificeert, zodat wij u een bericht kunnen sturen</td>
-    <td>Uw toestel, als u pushberichten toestaat</td>
-  </tr>
+  <tr><td>Account</td><td>Voornaam, achternaam, e-mailadres, wachtwoord (versleuteld opgeslagen), taalkeuze</td><td>U, bij het registreren</td></tr>
+  <tr><td>Woning en contract</td><td>Adres, postcode, woonplaats, complex, ingangsdatum, einddatum, huurprijs, servicekosten, parkeerplaats en berging, medebewoners op uw adres</td><td>Onze huuradministratie</td></tr>
+  <tr><td>Meldingen en bestellingen</td><td>Omschrijving, locatie in de woning, categorie, datum, en de foto's en video's die u meestuurt</td><td>U, via de app</td></tr>
+  <tr><td>Gesprekken</td><td>Uw berichten aan de AI-assistent en aan de beheerder, de antwoorden daarop, meegestuurde bijlagen, en of een bericht is gelezen</td><td>U en onze beheerders</td></tr>
+  <tr><td>Formulieren</td><td>Afhankelijk van het formulier: telefoonnummer, rekeningnummer en tenaamstelling, einddatum en reden van vertrek, toekomstig adres, foto's van de woning per ruimte, uw handtekening, en bij een aanvraag medehuurderschap een uittreksel uit de basisregistratie personen</td><td>U, via de app</td></tr>
+  <tr><td>Gegevens van een ander</td><td>Bij een aanvraag medehuurderschap of een gedeeltelijke opzegging: naam, adres, telefoonnummer en e-mailadres van de andere persoon</td><td>U, via de app. Zie hoofdstuk 7</td></tr>
+  <tr><td>Pushberichten</td><td>Een code die uw toestel identificeert, zodat wij u een bericht kunnen sturen</td><td>Uw toestel, als u pushberichten toestaat</td></tr>
 </table>
 
 <div class="kader">
-  <strong>Deel geen bijzondere gegevens in de chat.</strong> De chat is bedoeld
-  voor vragen over uw woning en voor onderhoudsverzoeken. Stuur er geen
-  burgerservicenummer, medische gegevens of andere gevoelige informatie in.
+  <strong>Deel geen onnodige gegevens in de chat.</strong> De chat is bedoeld
+  voor vragen over uw woning en voor onderhoudsverzoeken. Voer geen
+  persoonsgegevens van uzelf of van anderen in die niet nodig zijn voor uw
+  vraag of melding, en stuur er geen burgerservicenummer, medische gegevens of
+  andere gevoelige informatie in.
 </div>
+
+<h3>Welke gegevens zijn verplicht</h3>
+<p>De gegevens die nodig zijn om een account aan te maken en om uw
+huurovereenkomst of een aanvraag via de app uit te voeren, zijn noodzakelijk voor
+die dienstverlening. Verstrekt u die niet, dan kunnen wij u mogelijk geen toegang
+geven tot de betreffende functie of uw aanvraag niet verwerken. Gegevens die niet
+nodig zijn voor een functie, hoeft u niet te verstrekken.</p>
 
 <h2>3. Waarom wij ze verwerken, en op welke grond</h2>
 
 <table>
   <tr><th>Doel</th><th>Grondslag</th></tr>
-  <tr>
-    <td>U toegang geven tot de app en controleren dat u huurder bent</td>
-    <td>Uitvoering van de huurovereenkomst</td>
-  </tr>
-  <tr>
-    <td>Uw melding aannemen, beoordelen, doorzetten en met u bespreken</td>
-    <td>Uitvoering van de huurovereenkomst</td>
-  </tr>
-  <tr>
-    <td>De AI-assistent gebruiken om uw vraag te beantwoorden en uw melding compleet te maken</td>
-    <td>Gerechtvaardigd belang: meldingen sneller en vollediger afhandelen. U kunt ook per mail of telefonisch melden</td>
-  </tr>
-  <tr>
-    <td>Een formulier verwerken, zoals een opzegging of een aanvraag medehuurderschap</td>
-    <td>Uitvoering van de huurovereenkomst, en waar van toepassing het aangaan van een nieuwe overeenkomst</td>
-  </tr>
-  <tr>
-    <td>U informeren over uw melding en over uw complex, ook met pushberichten</td>
-    <td>Uitvoering van de huurovereenkomst</td>
-  </tr>
-  <tr>
-    <td>De app veilig en werkend houden, en storingen opsporen</td>
-    <td>Gerechtvaardigd belang: een betrouwbare en veilige dienst</td>
-  </tr>
+  <tr><td>U toegang geven tot de app en controleren dat u huurder bent</td><td>Uitvoering van de huurovereenkomst</td></tr>
+  <tr><td>Uw melding aannemen, beoordelen, doorzetten en met u bespreken</td><td>Uitvoering van de huurovereenkomst</td></tr>
+  <tr><td>De AI-assistent gebruiken om uw vraag te beantwoorden en uw melding compleet te maken</td><td>Gerechtvaardigd belang: meldingen sneller en vollediger afhandelen. U kunt ook per mail of telefonisch melden</td></tr>
+  <tr><td>Een formulier verwerken, zoals een opzegging of een aanvraag medehuurderschap</td><td>Uitvoering van de huurovereenkomst, en waar van toepassing het aangaan van een nieuwe overeenkomst</td></tr>
+  <tr><td>U informeren over uw melding en over uw complex, ook met pushberichten</td><td>Uitvoering van de huurovereenkomst</td></tr>
+  <tr><td>De app veilig en werkend houden, en storingen opsporen</td><td>Gerechtvaardigd belang: een betrouwbare en veilige dienst</td></tr>
 </table>
 
 <h3>Geen geautomatiseerde besluiten</h3>
@@ -185,9 +162,9 @@ een verwerkersovereenkomst gesloten.</p>
   <tr><td>Supabase</td><td>Database, inloggen en opslag van bestanden</td><td>Europese Unie</td></tr>
   <tr><td>n8n</td><td>Automatisering van meldingen, chat en mail</td><td>Europese Unie</td></tr>
   <tr><td>OpenAI</td><td>Verwerking van uw chatberichten</td><td>Buiten de EU, zie hieronder</td></tr>
-  <tr><td>Microsoft</td><td>Mailverkeer tussen u en de beheerder</td><td>Europese Unie</td></tr>
-  <tr><td>Expo</td><td>Bezorgen van pushberichten op uw toestel</td><td>Buiten de EU, zie hieronder</td></tr>
-  <tr><td>Google</td><td>Opslag van de kennisbank die de assistent gebruikt</td><td>Europese Unie</td></tr>
+  <tr><td>Microsoft</td><td>Mailverkeer tussen u en de beheerder, en bevestigingsmails</td><td>Europese Unie</td></tr>
+  <tr><td>Expo</td><td>Versturen van pushberichten</td><td>Buiten de EU, zie hieronder</td></tr>
+  <tr><td>Apple en Google</td><td>Bezorgen van het pushbericht op uw toestel, afhankelijk van of u een iPhone of een Android-telefoon gebruikt</td><td>Buiten de EU, zie hieronder</td></tr>
 </table>
 
 <p>Daarnaast gaat uw melding naar onze eigen beheerorganisatie en naar het
@@ -195,42 +172,33 @@ systeem waarmee wij onderhoud uitvoeren. Voor de uitvoering van een reparatie
 kunnen wij gegevens delen met de aannemer of installateur die het werk doet,
 beperkt tot wat daarvoor nodig is.</p>
 
-<h3>Doorgifte buiten de Europese Unie</h3>
-<p>Bij OpenAI en Expo kan verwerking buiten de Europese Unie plaatsvinden.
-Daarvoor gelden modelcontractbepalingen van de Europese Commissie. Met OpenAI is
-afgesproken dat uw chatberichten niet worden bewaard en niet worden gebruikt om
-modellen te trainen. Expo ontvangt alleen een toestelcode en de tekst van het
-pushbericht.</p>
+<h3>Doorgifte buiten de EER</h3>
+<p>Bij OpenAI, Expo, Apple en Google kan verwerking buiten de Europese Economische
+Ruimte (EER) plaatsvinden. Voor zover van toepassing gelden passende waarborgen
+voor internationale doorgifte, waaronder standaardcontractbepalingen van de
+Europese Commissie.
+OpenAI gebruikt uw chatberichten niet om modellen te trainen. OpenAI kan ze
+tot dertig dagen bewaren om misbruik op te sporen en verwijdert ze daarna. Voor het bezorgen van een pushbericht
+gaan alleen een code die uw toestel identificeert en de tekst van het bericht
+mee.</p>
 
-<h2 id="bewaren">5. Hoe lang wij gegevens bewaren</h2>
+<h2 id="bewaren-nl">5. Hoe lang wij gegevens bewaren</h2>
 
 <table>
   <tr><th>Gegeven</th><th>Termijn</th></tr>
-  <tr>
-    <td>Uw account</td>
-    <td>Zolang u huurder bent. Verwijdert u het zelf, dan gaat het direct weg</td>
-  </tr>
-  <tr>
-    <td>Melding: adres, datum, omschrijving, categorie en afhandeling</td>
-    <td>Zolang wij de woning beheren. Deze gegevens horen bij het onderhoud van de woning</td>
-  </tr>
-  <tr>
-    <td>Foto's en video's bij een melding</td>
-    <td>Vijf jaar na afhandeling van de melding</td>
-  </tr>
-  <tr>
-    <td>Gesprekken met de assistent en met de beheerder</td>
-    <td>Zolang uw huurovereenkomst loopt en daarna twee jaar. Daarna blijft alleen staan om welke woning het ging, waarover het gesprek ging en of het tot een melding leidde, zonder uw naam en zonder de tekst</td>
-  </tr>
-  <tr>
-    <td>Ingevulde formulieren, inclusief handtekening en uittreksel</td>
-    <td>Eén jaar na afhandeling in de app. Het ondertekende stuk zelf bewaren wij daarna in onze administratie, zolang dat voor de overeenkomst nodig is</td>
-  </tr>
-  <tr>
-    <td>Toestelcode voor pushberichten</td>
-    <td>Tot u uitlogt, het toestel wisselt of pushberichten uitzet</td>
-  </tr>
+  <tr><td>Uw account</td><td>Zolang u huurder bent. Verwijdert u het zelf, dan gaat het direct weg</td></tr>
+  <tr><td>Melding: adres, datum, omschrijving, categorie en afhandeling</td><td>Zolang wij de woning beheren. Deze gegevens horen bij het onderhoud van de woning</td></tr>
+  <tr><td>Foto's en video's bij een melding</td><td>Zolang wij de woning beheren. De foto's en video's horen bij de melding en blijven beschikbaar voor het onderhoud van de woning, ook nadat u vertrekt. Verwijdert u uw account, dan gaan ze weg</td></tr>
+  <tr><td>Gesprekken met de assistent en met de beheerder</td><td>Zolang uw huurovereenkomst loopt en daarna twee jaar. Daarna blijft alleen staan om welke woning het ging, waarover het gesprek ging en of het tot een melding leidde, zonder uw naam en zonder de tekst</td></tr>
+  <tr><td>Ingevulde formulieren, inclusief handtekening en uittreksel</td><td>Eén jaar na afhandeling in de app. Het ondertekende stuk zelf bewaren wij daarna in onze administratie, zolang dat voor de overeenkomst nodig is</td></tr>
+  <tr><td>Toestelcode voor pushberichten</td><td>Tot u uitlogt, het toestel wisselt of pushberichten uitzet</td></tr>
 </table>
+
+<p>Wij bewaren onderhoudsgegevens en foto's zolang deze noodzakelijk zijn voor de
+onderhoudshistorie van de woning, het herkennen van terugkerende gebreken of het
+aantonen van de staat van de woning bij oplevering. Zolang Lemon Suites de woning
+beheert, kan dit betekenen dat deze gegevens na uw vertrek beschikbaar blijven.
+Zodra de gegevens daarvoor niet meer nodig zijn, verwijderen wij ze.</p>
 
 <p>Verwijdert u uw account, dan gaan uw gegevens weg en blijft van een melding
 alleen het complex en de categorie over, zonder iets wat naar u verwijst. Uw
@@ -273,6 +241,10 @@ rechten als u, en kan die uitoefenen via
   <li>uw gegevens in een gangbaar bestandsformaat te ontvangen.</li>
 </ul>
 
+<p>U kunt bezwaar maken tegen de verwerkingen die wij op ons gerechtvaardigd
+belang baseren, waaronder het gebruik van de AI-assistent en het beveiligen en
+verbeteren van de werking van de app.</p>
+
 <p>Stuur uw verzoek naar
 <a href="mailto:home@lemonsuites.nl?subject=Privacyverzoek%20Huurdersapp">home@lemonsuites.nl</a>
 met als onderwerp "Privacyverzoek Huurdersapp". Wij reageren binnen één maand.
@@ -303,5 +275,220 @@ app.</p>
 </footer>
 
 </div>
+<!-- ============================ ENGLISH ============================ -->
+<div class="en" lang="en" id="en-start">
+
+<h1>Privacy Statement Tenant App</h1>
+<p class="datum">Version 1, 24 September 2026. This English text is a translation; in case of doubt the Dutch version prevails.</p>
+
+<p>This statement explains which personal data we process when you use the Lemon
+Suites Tenant App, why we do so, how long we keep it and what rights you have.</p>
+
+<p>This statement is about the app. A report you submit through the app is then
+passed to our own email environment and our management system, which have their
+own retention periods; see the chapter <a href="#bewaren-en">How long we keep
+data</a>.</p>
+
+<h2>1. Who is responsible</h2>
+
+<p><strong>Lemon Suites</strong><br>
+Torenallee 65, 5617 BB Eindhoven, the Netherlands<br>
+<a href="mailto:home@lemonsuites.nl">home@lemonsuites.nl</a></p>
+
+<p>Lemon Suites is the controller for the data described in this statement. We
+have not appointed a data protection officer. We assess periodically whether one
+is required.</p>
+
+<h2>2. Which data we process</h2>
+
+<table>
+  <tr><th>Type</th><th>What</th><th>Where it comes from</th></tr>
+  <tr><td>Account</td><td>First name, last name, email address, password (stored encrypted), language choice</td><td>You, when registering</td></tr>
+  <tr><td>Home and contract</td><td>Address, postcode, town, complex, start date, end date, rent, service costs, parking space and storage, co-residents at your address</td><td>Our rental administration</td></tr>
+  <tr><td>Reports and orders</td><td>Description, location in the home, category, date, and the photos and videos you attach</td><td>You, via the app</td></tr>
+  <tr><td>Conversations</td><td>Your messages to the AI assistant and to the property manager, the replies, attachments, and whether a message has been read</td><td>You and our property managers</td></tr>
+  <tr><td>Forms</td><td>Depending on the form: phone number, bank account number and account holder, end date and reason for leaving, future address, photos of the home per room, your signature, and for a co-tenancy request an extract from the municipal personal records</td><td>You, via the app</td></tr>
+  <tr><td>Someone else's data</td><td>For a co-tenancy request or a partial termination: name, address, phone number and email of the other person</td><td>You, via the app. See chapter 7</td></tr>
+  <tr><td>Push notifications</td><td>A code that identifies your device, so we can send you a message</td><td>Your device, if you allow push notifications</td></tr>
+</table>
+
+<div class="kader">
+  <strong>Do not share unnecessary data in the chat.</strong> The chat is meant
+  for questions about your home and for maintenance requests. Do not enter
+  personal data about yourself or others that is not needed for your question or
+  report, and do not send a national identification number, medical data or
+  other sensitive information.
+</div>
+
+<h3>Which data is required</h3>
+<p>The data needed to create an account and to carry out your tenancy agreement or
+a request through the app is necessary for that service. If you do not provide it,
+we may not be able to give you access to the relevant feature or to process your
+request. Data that is not needed for a feature, you do not have to provide.</p>
+
+<h2>3. Why we process it, and on what basis</h2>
+
+<table>
+  <tr><th>Purpose</th><th>Legal basis</th></tr>
+  <tr><td>Giving you access to the app and verifying that you are a tenant</td><td>Performance of the tenancy agreement</td></tr>
+  <tr><td>Receiving, assessing, forwarding and discussing your report</td><td>Performance of the tenancy agreement</td></tr>
+  <tr><td>Using the AI assistant to answer your question and complete your report</td><td>Legitimate interest: handling reports faster and more completely. You can also report by email or phone</td></tr>
+  <tr><td>Processing a form, such as a termination or a co-tenancy request</td><td>Performance of the tenancy agreement, and where applicable entering into a new agreement</td></tr>
+  <tr><td>Informing you about your report and your complex, including by push notification</td><td>Performance of the tenancy agreement</td></tr>
+  <tr><td>Keeping the app secure and working, and detecting faults</td><td>Legitimate interest: a reliable and secure service</td></tr>
+</table>
+
+<h3>No automated decisions</h3>
+<p>We do not make decisions about you that are based solely on a computer. The AI
+assistant answers questions and helps you complete a report. What happens with
+your report is always assessed by a member of staff.</p>
+
+<h3>You are talking to an AI assistant</h3>
+<p>The chat states that you are talking to an AI assistant. Your messages are
+processed for this by OpenAI. Your name, address, email and contract details are
+not sent there: the assistant only receives your message and the information
+about your complex. What you write in a message does go with it.</p>
+
+<h2>4. Who receives your data</h2>
+
+<p>We do not sell your data and do not use it for advertising. We use the
+following parties, who process solely on our behalf. We have concluded a data
+processing agreement with each of them.</p>
+
+<table>
+  <tr><th>Party</th><th>For what</th><th>Where</th></tr>
+  <tr><td>Supabase</td><td>Database, login and file storage</td><td>European Union</td></tr>
+  <tr><td>n8n</td><td>Automation of reports, chat and email</td><td>European Union</td></tr>
+  <tr><td>OpenAI</td><td>Processing of your chat messages</td><td>Outside the EU, see below</td></tr>
+  <tr><td>Microsoft</td><td>Email traffic between you and the property manager, and confirmation emails</td><td>European Union</td></tr>
+  <tr><td>Expo</td><td>Sending push notifications</td><td>Outside the EU, see below</td></tr>
+  <tr><td>Apple and Google</td><td>Delivering the push notification to your device, depending on whether you use an iPhone or an Android phone</td><td>Outside the EU, see below</td></tr>
+</table>
+
+<p>In addition, your report is passed to our own management organisation and to
+the system we use to carry out maintenance. To carry out a repair we may share
+data with the contractor or installer doing the work, limited to what is needed
+for that.</p>
+
+<h3>Transfer outside the EEA</h3>
+<p>With OpenAI, Expo, Apple and Google, processing may take place outside the
+European Economic Area (EEA). Where applicable, appropriate safeguards for
+international transfers apply, including the standard contractual clauses of the
+European Commission. OpenAI does not use your chat messages to train models. OpenAI may keep them
+for up to thirty days to detect abuse, and deletes them afterwards. To deliver a push notification, only a code identifying
+your device and the text of the message are transferred.</p>
+
+<h2 id="bewaren-en">5. How long we keep data</h2>
+
+<table>
+  <tr><th>Data</th><th>Period</th></tr>
+  <tr><td>Your account</td><td>As long as you are a tenant. If you delete it yourself, it is removed immediately</td></tr>
+  <tr><td>Report: address, date, description, category and handling</td><td>As long as we manage the home. This data belongs to the maintenance of the home</td></tr>
+  <tr><td>Photos and videos with a report</td><td>As long as we manage the home. The photos and videos belong to the report and remain available for the maintenance of the home, also after you leave. If you delete your account, they are removed</td></tr>
+  <tr><td>Conversations with the assistant and the property manager</td><td>While your tenancy agreement runs and two years thereafter. After that, only which home it concerned, what the conversation was about and whether it led to a report remains, without your name and without the text</td></tr>
+  <tr><td>Completed forms, including signature and extract</td><td>One year after handling in the app. The signed document itself is then kept in our administration, for as long as needed for the agreement</td></tr>
+  <tr><td>Device code for push notifications</td><td>Until you log out, change device or turn push notifications off</td></tr>
+</table>
+
+<p>We keep maintenance data and photos for as long as they are necessary for the
+maintenance history of the home, recognising recurring defects, or demonstrating
+the condition of the home at handover. For as long as Lemon Suites manages the
+home, this may mean that this data remains available after you leave. Once the data
+is no longer needed for this, we delete it.</p>
+
+<p>If you delete your account, your data is removed and only the complex and the
+category of a report remain, with nothing that refers to you. Your tenancy
+agreement continues to exist; it has its own basis and its own period.</p>
+
+<p>Our email environment and management system have their own retention periods.
+These are separate from the app.</p>
+
+<h2>6. How we secure your data</h2>
+
+<ul>
+  <li>All traffic between the app and our systems is encrypted.</li>
+  <li>You only see your own data. This is enforced in the database itself, not only in the app.</li>
+  <li>Photos and documents are kept in protected storage and can only be opened with a link that is valid briefly.</li>
+  <li>Our property managers can view reports and conversations to help you.</li>
+  <li>We check security with every change and have it assessed externally on a periodic basis.</li>
+</ul>
+
+<h2>7. If you enter someone else's data</h2>
+
+<p>For a co-tenancy request or a partial termination you enter another person's
+data, for example a prospective co-tenant. We use that data only to assess and
+handle the request.</p>
+
+<p>When submitting, we ask you to confirm that you have informed that person, and
+we send them a message at the given email address with a reference to this
+statement. That person has the same rights as you, and can exercise them via
+<a href="mailto:home@lemonsuites.nl">home@lemonsuites.nl</a>.</p>
+
+<h2>8. Your rights</h2>
+
+<p>You have the right to:</p>
+<ul>
+  <li>see which data we process about you;</li>
+  <li>have incorrect data corrected;</li>
+  <li>have your data deleted;</li>
+  <li>have the processing restricted;</li>
+  <li>object to processing based on legitimate interest;</li>
+  <li>receive your data in a common file format.</li>
+</ul>
+
+<p>You can object to the processing we base on our legitimate interest, including
+the use of the AI assistant and securing and improving the operation of the app.</p>
+
+<p>Send your request to
+<a href="mailto:home@lemonsuites.nl?subject=Privacy%20request%20Tenant%20App">home@lemonsuites.nl</a>
+with the subject "Privacy request Tenant App". We respond within one month. If
+your request is complex, we may extend this by two months; we will tell you so
+within the first month.</p>
+
+<p>You can also delete your account yourself, in the app under Profile.</p>
+
+<p>We may ask you for additional details to verify that it is really you. We do
+this only to prevent someone else from requesting your data.</p>
+
+<h2>9. Filing a complaint</h2>
+
+<p>If you disagree with how we handle your data, please let us know via
+<a href="mailto:home@lemonsuites.nl">home@lemonsuites.nl</a>. You also have the
+right to file a complaint with the Dutch Data Protection Authority (Autoriteit
+Persoonsgegevens) via
+<a href="https://autoriteitpersoonsgegevens.nl">autoriteitpersoonsgegevens.nl</a>.</p>
+
+<h2>10. Changes</h2>
+
+<p>We update this statement when the app changes. The version and date are shown
+at the top. In case of a significant change we will notify you in the app.</p>
+
+<footer>
+  Lemon Suites, Torenallee 65, 5617 BB Eindhoven, the Netherlands —
+  <a href="mailto:home@lemonsuites.nl">home@lemonsuites.nl</a>
+</footer>
+
+</div>
+
+</div>
+
+<script>
+  function kiesTaal(t) {
+    document.body.setAttribute('data-taal', t);
+    document.getElementById('btn-nl').classList.toggle('actief', t === 'nl');
+    document.getElementById('btn-en').classList.toggle('actief', t === 'en');
+    document.documentElement.setAttribute('lang', t);
+    try { history.replaceState(null, '', t === 'en' ? '#en' : '#nl'); } catch (e) {}
+  }
+  // Begin in het Engels als de link op #en eindigt of de browser Engels is.
+  (function () {
+    var h = (location.hash || '').toLowerCase();
+    if (h.indexOf('en') === 1) { kiesTaal('en'); return; }
+    if (h.indexOf('nl') === 1) { kiesTaal('nl'); return; }
+    var taal = (navigator.language || 'nl').toLowerCase();
+    if (taal.indexOf('nl') !== 0) kiesTaal('en');
+  })();
+</script>
+
 </body>
 </html>
